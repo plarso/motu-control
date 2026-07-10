@@ -18,6 +18,8 @@ const fetchFirstDeviceId = async (origin: string) => {
 
   return deviceList[0].uid;
 };
+export type MotuClient = ReturnType<typeof createMotuClient>;
+
 export const createMotuClient = (initOptions: Partial<MotuClientOptions> = {}) => {
   const origin = initOptions.origin || 'http://127.0.0.1:1280';
   const optionsPromise = new Promise<MotuClientOptions>(async (resolve) => {
