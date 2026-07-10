@@ -1,4 +1,5 @@
 import { Datastore, DatastoreKey, ExtractDataStoreKey } from "./api";
+import { retryUntilSuccess } from "./retry";
 
 const asyncSleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
@@ -8,7 +9,7 @@ type MotuClientOptions = {
   deviceId: string;
   labels: Record<string, string>;
 };
-const fetchFirstDeviceId = async (origin: string) => {
+const fetchFirstDeviceId = async (origin: string) => retryUntilSuccess(async () => {
   console.log(`${origin}/connected_devices`);
   const res = await fetch(`${origin}/connected_devices`);
   if (!res.ok) throw res;
@@ -17,7 +18,7 @@ const fetchFirstDeviceId = async (origin: string) => {
   if (!deviceList.length) throw new Error('No devices found');
 
   return deviceList[0].uid;
-};
+}, { label: 'MOTU device discovery' });
 export type MotuClient = ReturnType<typeof createMotuClient>;
 
 export const createMotuClient = (initOptions: Partial<MotuClientOptions> = {}) => {
