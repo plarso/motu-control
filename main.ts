@@ -32,6 +32,18 @@ const AUX_CONTROLLER_MAP = {
 };
 const CHANNEL_FADER_CONTROLLER_VALUE = 7;
 const MAIN_FADER_CONTROLLER_VALUE = 14;
+// List available MIDI input and output devices
+console.log('Available MIDI Input Devices:');
+const inputs = midi.getInputs();
+inputs.forEach((input: string, index: number) => {
+  console.log(`${index}: ${input}`);
+});
+
+console.log('Available MIDI Output Devices:');
+const outputs = midi.getOutputs();
+outputs.forEach((output: string, index: number) => {
+  console.log(`${index}: ${output}`);
+});
 const output = new midi.Output(MIDI_OUTPUT);
 
 let digitalReadoutTimeout: NodeJS.Timeout | null = null;
@@ -56,7 +68,7 @@ function updateDigitalReadout(output: any, volPercent: number) {
     for (let i = 0; i < 40; i++) {
       output.send('noteon', {
         note: i,
-        velocity: 95,
+        velocity: 10,
         channel: 0
       });
     }
@@ -97,7 +109,7 @@ function updateDigitalReadout(output: any, volPercent: number) {
     firstDigitNotes.forEach((note) => {
       output.send('noteon', {
         note: note,
-        velocity: 95,
+        velocity: 1,
         channel: 0
       });
     });
@@ -107,7 +119,7 @@ function updateDigitalReadout(output: any, volPercent: number) {
     secondDigitNotes.forEach((note) => {
       output.send('noteon', {
         note: note,
-        velocity: 95,
+        velocity: 1,
         channel: 0
       });
     });
