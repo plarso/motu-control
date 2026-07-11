@@ -36,6 +36,8 @@ sed \
 launchctl bootout "gui/$(id -u)/${LABEL}" 2>/dev/null || true
 launchctl bootstrap "gui/$(id -u)" "$PLIST_DEST"
 launchctl enable "gui/$(id -u)/${LABEL}"
+# RunAtLoad doesn't auto-start on macOS Sonoma/Sequoia after bootstrap; kick it explicitly.
+launchctl kickstart "gui/$(id -u)/${LABEL}"
 
 echo
 echo "Installed and started ${LABEL}."
